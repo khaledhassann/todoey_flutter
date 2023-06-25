@@ -1,34 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:todoey_flutter/widgets/task_tile.dart';
-import 'package:todoey_flutter/models/task.dart';
+import 'package:provider/provider.dart';
+import 'package:todoey_flutter/models/cn_tasks.dart';
 
-class TasksList extends StatefulWidget {
-  @override
-  State<TasksList> createState() => _TasksListState();
-}
-
-class _TasksListState extends State<TasksList> {
-  List<Task> tasks = [
-    Task(name: "Get a 5th place in a judo tournament"),
-    Task(name: "Sign autographs"),
-    Task(name: "Become a millionaire"),
-  ];
+class TasksList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: (context, index) {
-        return TaskTile(
-          taskTitle: tasks[index].name,
-          isChecked: tasks[index].isDone,
-          checkBoxCallback: (checkBoxState) {
-            setState(() {
-              tasks[index].toggleDone();
-            });
+    return Consumer<CNTasks>(
+      builder: (context, cnTasks, child){
+        return ListView.builder(
+          itemBuilder: (context, index) {
+            final task = cnTasks.tasks[index];
+            return Dismissible(
+              key: UniqueKey(),
+              background: Container(color: Colors.red,),
+              onDismissed: (direction){
+                cnTasks.deleteTask(index);
+              },
+              child: TaskTile(
+                taskTitle: task.name,
+                isChecked: task.isDone,
+                checkBoxCallback: (checkBoxState) {
+                  cnTasks.updateTask(task);
+                },
+              ),
+            );
           },
+          itemCount: cnTasks.taskCount,
         );
       },
-      itemCount: tasks.length,
     );
   }
 }

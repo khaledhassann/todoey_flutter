@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
+import '../models/task.dart';
 
 class AddTaskScreen extends StatelessWidget {
-  const AddTaskScreen({Key? key}) : super(key: key);
+
+  final Function(String?) addTaskCallback;
+  AddTaskScreen(this.addTaskCallback);
 
   @override
   Widget build(BuildContext context) {
+
+    String? taskName;
+
     return Container(
-      color: Color(0xff757575),
+      color: const Color(0xff757575),
       child: Container(
-        // height: res.keyboardHeight + 20.0,
-        padding: EdgeInsets.all(20.0),
-        decoration: BoxDecoration(
+        padding: const EdgeInsets.all(20.0),
+        decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20.0),
@@ -32,22 +36,25 @@ class AddTaskScreen extends StatelessWidget {
             TextField(
               autofocus: true,
               textAlign: TextAlign.center,
-              decoration: InputDecoration(
-
-              ),
+              decoration: const InputDecoration(),
+              onChanged: (newTask){
+                taskName = newTask;
+              },
             ),
-            SizedBox(height: 20.0,),
+            const SizedBox(height: 20.0,),
             TextButton(
-              onPressed: () {},
-              child: Text(
+              onPressed: (){
+                addTaskCallback(taskName);
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>
+                  (Colors.lightBlueAccent),
+              ),
+              child: const Text(
                 'Add',
                 style: TextStyle(
                   color: Colors.white,
                 ),
-              ),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>
-                  (Colors.lightBlueAccent),
               ),
             ),
           ],
@@ -55,5 +62,4 @@ class AddTaskScreen extends StatelessWidget {
       ),
     );
   }
-/**/
 }
